@@ -1,0 +1,58 @@
+//   const endpoint = await getHttpEndpoint({ network: "testnet" });
+//   const tonClient = new TonClient({ endpoint });
+
+//   const mnemonic = process.env.MNEMONIC;
+
+//   if (!mnemonic) {
+//     throw new Error("MNEMONIC not found");
+//   }
+
+//   const keyPair = await mnemonicToWalletKey(mnemonic.split(" "));
+
+//   const wallet = WalletContractV4.create({
+//     publicKey: keyPair.publicKey,
+//     workchain: 0,
+//   });
+//   const receiverAddress = "0QBolUJgZo-UWhXifayYZWKJUDGNrqehkt0Yx5K8mxijvODi";
+
+//   const walletContract = tonClient.open(wallet);
+
+//   const signedMessage = await walletContract.createTransfer({
+//     seqno: await walletContract.getSeqno(),
+//     secretKey: keyPair.secretKey,
+//     messages: [
+//       internal({
+//         to: receiverAddress,
+//         value: toNano("0.001"), // 0.001 TON
+//         bounce: false,
+//       }),
+//     ],
+//     sendMode: SendMode.PAY_GAS_SEPARATELY,
+//     timeout: Math.floor(Date.now() / 1000) + 60,
+//   });
+
+//   await walletContract.send(signedMessage);
+
+//   const externalMessage = beginCell()
+//     .store(
+//       storeMessage(
+//         external({
+//           to: walletContract.address,
+//           body: signedMessage,
+//         })
+//       )
+//     )
+//     .endCell();
+
+//   console.log(externalMessage);
+
+//   const externaMsg = externalMessage.beginParse();
+//   const signature = externaMsg.loadBits(512);
+//   const subWalletId = externaMsg.loadUint(32);
+
+//   console.log("signature", signature, subWalletId);
+//   console.log(
+//     `https://testnet.tonviewer.com/transaction/${externalMessage
+//       .hash()
+//       .toString("hex")}`
+//   );
